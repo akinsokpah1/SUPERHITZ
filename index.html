@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🎵 SUPERHITZ</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <script type="module">
+
+    // ---------------------- IMPORTS ----------------------
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getStorage, ref, uploadBytesResumable, getDownloadURL, listAll } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
+
+    // ---------------------- FIREBASE CONFIG ----------------------
+    const firebaseConfig = {
+      apiKey: "AIzaSyAGvgWqTdd0tt72NZAc6XQVM1GOj6FgThs",
+      authDomain: "superhitz-app.firebaseapp.com",
+      projectId: "superhitz-app",
+      storageBucket: "superhitz-app.firebasestorage.app",
+      messagingSenderId: "872258546441",
+      appId: "1:872258546441:web:fe82ded48bb326a649c1d8"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const storage = getStorage(app);
+
+    // ---------------------- AUTH FUNCTIONS ----------------------
+    const emailInput = document.getElementById('email');
+    const passInput = document.getElementById('password');
+    const loginBtn = document.getElementById('loginBtn');
+    const registerBtn = document.getElementById('registerBtn');
+    const googleBtn = document.getElementById('googleBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const userInfo = document.getElementById('userInfo');
+
+    loginBtn.onclick = async () => {
+      try {
+        await signInWithEmailAndPassword(auth, emailInput.value, passInput.value);
+        alert('✅ Logged in successfully!');
+        showMusicSection();
+      } catch (e) {
+        alert(`❌ Login failed: ${e.message}`);
+      }
+    };
+
+    registerBtn.onclick = async () => {
+      try {
+        await createUserWithEmailAndPassword(auth, emailInput.value, passInput.value);
+        alert('🎉 Account created successfully!');
+      } catch (e) {
+        alert(`❌ Registration failed: ${e.message}`);
+      }
+    };
+
+    googleBtn.onclick = async () => {
+      const provider = new GoogleAuthProvider();
+      try {
+        await signInWithPopup(auth, provider);
+        alert('✅ Google Sign-in success!');
+        showMusicSection();
+      } catch (e) {
+        alert(`❌ Google Sign-in failed: ${e.message}`);
+      }
+    };
+
+    logoutBtn.onclick = async () => {
+      await signOut(auth);
+      hideMusicSection();
+      alert('👋 Logged out');
+    };
+
+    // ---------------------- MUSIC UPLOAD ----------------------
+    const uploadInput = document.getElementById('musicFile');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const musicList = document.getElementById('musicList');
+
+    uploadBtn.onclick = async () => {
+      const file = uploadInput.files[0];
+      if (!file) return alert('Please select a music file first 🎶');
+
+      const storageRef = ref(storage, `music/${file.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on('state_changed', 
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          uploadBtn.innerText = `Uploading... ${Math.round(progress)}%`;
+        }, 
+        (error) => alert('❌ Upload failed: ' + error.message),
+        async () => {
+          const url = await getDownloadURL(uploadTask.snapshot.ref);
+          uploadBtn.innerText = 'Upload Complete ✅';
+          addMusicToList(file.name, url);
+        }
+      );
+    };
+
+    // ---------------------- DISPLAY MUSIC ----------------------
+    async function loadMusicList() {
+      const musicRef = ref(storage, 'music/');
+      const res = await listAll(musicRef);
+      res.items.forEach(async (itemRef) => {
+        const url = await getDownloadURL(itemRef);
+        addMusicToList(itemRef.name, url);
+      });
+    }
+
+    function addMusicToList(name, url) {
+      const li = document.createElement('li');
+      li.className = 'p-2 bg-gray-800 text-white rounded mb-2 flex flex-col';
+      li.innerHTML = `
+        <span class="font-semibold">${name}</span>
+        <audio controls class="mt-1 w-full">
+          <source src="${url}" type="audio/mpeg">
+        </audio>
+      `;
+      musicList.appendChild(li);
+    }
+
+    // ---------------------- UI HANDLING ----------------------
+    function showMusicSection() {
+      document.getElementById('authSection').classList.add('hidden');
+      document.getElementById('musicSection').classList.remove('hidden');
+      loadMusicList();
+    }
+
+    function hideMusicSection() {
+      document.getElementById('musicSection').classList.add('hidden');
+      document.getElementById('authSection').classList.remove('hidden');
+    }
+
+  </script>
+</head>
+
+<body class="bg-gray-900 text-white font-sans">
+  <header class="p-4 bg-gray-800 shadow-lg flex justify-between items-center">
+    <h1 class="text-2xl font-bold">🎵 SUPERHITZ</h1>
+    <button id="logoutBtn" class="bg-red-600 px-3 py-1 rounded hover:bg-red-700">Logout</button>
+  </header>
+
+  <!-- AUTH SECTION -->
+  <section id="authSection" class="p-6 max-w-md mx-auto mt-12 bg-gray-800 rounded-xl shadow-lg">
+    <h2 class="text-xl font-semibold mb-4">Sign In / Register</h2>
+    <input id="email" type="email" placeholder="Email" class="w-full mb-2 p-2 rounded bg-gray-700 text-white" />
+    <input id="password" type="password" placeholder="Password" class="w-full mb-4 p-2 rounded bg-gray-700 text-white" />
+    <div class="flex space-x-2">
+      <button id="loginBtn" class="bg-yellow-500 flex-1 py-2 rounded font-semibold">Sign In</button>
+      <button id="registerBtn" class="bg-green-500 flex-1 py-2 rounded font-semibold">Register</button>
+    </div>
+    <button id="googleBtn" class="mt-3 w-full bg-blue-600 py-2 rounded font-semibold">Sign in with Google</button>
+  </section>
+
+  <!-- MUSIC SECTION -->
+  <section id="musicSection" class="hidden p-6 max-w-2xl mx-auto mt-10">
+    <h2 class="text-xl font-semibold mb-4">🔥 Trending Songs</h2>
+    <div class="bg-gray-800 p-4 rounded-lg mb-4">
+      <input id="musicFile" type="file" accept="audio/*" class="mb-3 w-full text-sm text-gray-300" />
+      <button id="uploadBtn" class="bg-yellow-500 w-full py-2 rounded font-semibold">Upload Song</button>
+    </div>
+    <ul id="musicList"></ul>
+  </section>
+
+</body>
+</html>
