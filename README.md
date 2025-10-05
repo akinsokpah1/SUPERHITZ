@@ -12,7 +12,7 @@ Professional React + Tailwind music platform template, Blue & Gold theme — per
 ## Setup (local / Termux)
 ```bash
 # 1. clone repo
-git clone https://github.com/<your-username>/superhitz.git
+git clone https://github.com/<akinsokpah3>/superhitz.git
 cd superhitz
 
 # 2. install
