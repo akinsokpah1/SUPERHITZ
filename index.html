@@ -1,18 +1,183 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🎵 SUPERHITZ</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
-  <script type="module">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SUPERHITZ — by Akin S. Sokpah</title>
+  <meta name="description" content="SUPERHITZ — Liberian music platform by Akin S. Sokpah" />
+  <style>
+    :root{--blue:#0f4c81;--gold:#d4af37;--bg:#071028;--card:#0d1220;--muted:#9aa3b2}
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,var(--bg),#02111f);color:#fff}
+    header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:linear-gradient(90deg,rgba(15,76,129,0.12),transparent);backdrop-filter:blur(6px)}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:48px;height:48px;border-radius:12px;background:linear-gradient(45deg,var(--blue),var(--gold));display:flex;align-items:center;justify-content:center;color:#000;font-weight:900}
+    .title{font-weight:800}
+    nav a{color:#e6eef7;margin-left:12px;text-decoration:none}
+    .container{max-width:1100px;margin:26px auto;padding:0 16px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:16px;border-radius:12px;margin-bottom:16px;box-shadow:0 10px 30px rgba(2,6,23,0.6)}
+    .hero{display:grid;grid-template-columns:1fr;gap:16px;align-items:center}
+    @media(min-width:900px){.hero{grid-template-columns:1fr 420px}}
+    .h1{font-size:32px;color:var(--gold);font-weight:900}
+    .lead{color:var(--muted);margin-top:8px}
+    .btn{display:inline-block;padding:10px 16px;border-radius:999px;font-weight:700;text-decoration:none;cursor:pointer}
+    .btn-primary{background:var(--gold);color:#000}
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff}
+    .grid{display:grid;grid-template-columns:1fr;gap:12px}
+    @media(min-width:700px){.grid{grid-template-columns:repeat(2,1fr)}}
+    .small{font-size:13px;color:var(--muted)}
+    input,textarea,select{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#fff}
+    .song{display:flex;gap:12px;padding:10px;border-radius:10px;align-items:flex-start;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent)}
+    .cover{width:92px;height:92px;border-radius:8px;object-fit:cover;background:#111}
+    footer{padding:18px;text-align:center;color:var(--muted)}
+    .whatsapp{position:fixed;right:18px;bottom:18px;width:56px;height:56px;border-radius:999px;background:linear-gradient(180deg,#25D366,#128C7E);display:flex;align-items:center;justify-content:center}
+    audio{width:100%}
+    .muted{color:var(--muted)}
+    .notice{padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);color:var(--muted)}
+  </style>
 
-    // ---------------------- IMPORTS ----------------------
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { getStorage, ref, uploadBytesResumable, getDownloadURL, listAll } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo">SH</div>
+      <div>
+        <div class="title">SUPERHITZ</div>
+        <div class="small">by Akin S. Sokpah</div>
+      </div>
+    </div>
+    <nav id="nav">
+      <a href="#trending">Trending</a>
+      <a href="#new">New</a>
+      <a href="#" id="authLink" class="small">Sign in</a>
+    </nav>
+  </header>
 
-    // ---------------------- FIREBASE CONFIG ----------------------
+  <main class="container">
+    <section class="card hero">
+      <div>
+        <div class="h1">SUPERHITZ</div>
+        <div class="lead">Liberian music hub & AI studio — sign in to upload, generate music, and use the GPT V8 assistant.</div>
+        <div style="margin-top:12px">
+          <button id="exploreBtn" class="btn btn-primary">Explore Trending</button>
+          <a href="https://wa.me/231887716973" class="btn btn-ghost" target="_blank">WhatsApp Akin</a>
+        </div>
+        <div class="notice" style="margin-top:12px">Tip: sign in (Google or email). AI features call a secure backend — your API keys remain private.</div>
+      </div>
+
+      <div style="border-radius:12px;overflow:hidden">
+        <img src="https://images.unsplash.com/photo-1507878866276-a947ef722fee?auto=format&fit=crop&w=1400&q=60" alt="hero" style="width:100%;height:260px;object-fit:cover"/>
+      </div>
+    </section>
+
+    <div class="grid" style="margin-top:12px">
+      <div class="card">
+        <h3>Trending Songs</h3>
+        <div id="tracksList" style="margin-top:12px"></div>
+      </div>
+
+      <div class="card">
+        <h3>AI Studio & Uploads</h3>
+
+        <!-- Auth area -->
+        <div id="authArea" class="card" style="padding:12px">
+          <div id="signedOut">
+            <div style="font-weight:800">Sign in to access studio</div>
+            <div class="small" style="margin-top:6px">Google or Email</div>
+            <div style="margin-top:10px;display:flex;gap:8px">
+              <button id="googleSignIn" class="btn btn-ghost">Sign in with Google</button>
+              <button id="emailToggle" class="btn btn-ghost">Email</button>
+            </div>
+
+            <div id="emailForm" style="display:none;margin-top:10px">
+              <input id="email" type="email" placeholder="Email" />
+              <input id="password" type="password" placeholder="Password" style="margin-top:8px" />
+              <div style="display:flex;gap:8px;margin-top:8px">
+                <button id="emailSignIn" class="btn btn-primary">Sign In</button>
+                <button id="emailRegister" class="btn btn-ghost">Register</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="signedIn" style="display:none">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div><div id="displayName" style="font-weight:800"></div><div id="displayEmail" class="small"></div></div>
+              <div style="text-align:right">
+                <button id="goProfile" class="btn btn-ghost">My Profile</button>
+                <button id="signOut" class="btn btn-ghost" style="margin-left:6px">Sign out</button>
+              </div>
+            </div>
+            <div class="notice small" style="margin-top:10px">You can upload audio, generate lyrics, and request AI music from the secure backend.</div>
+          </div>
+        </div>
+
+        <!-- Upload form (client will post to backend /api/upload on functions domain) -->
+        <div id="uploadCard" style="margin-top:12px;display:none">
+          <h4>Upload a Track</h4>
+          <input id="title" placeholder="Song title" style="margin-top:8px"/>
+          <input id="artist" placeholder="Artist (optional)" style="margin-top:8px"/>
+          <input id="tags" placeholder="Tags, comma separated" style="margin-top:8px"/>
+          <input id="cover" type="file" accept="image/*" style="margin-top:8px"/>
+          <input id="audio" type="file" accept="audio/*" style="margin-top:8px"/>
+          <div style="margin-top:8px;display:flex;gap:8px">
+            <button id="uploadBtn" class="btn btn-primary">Upload</button>
+            <button id="clearUpload" class="btn btn-ghost">Clear</button>
+          </div>
+          <div id="uploadStatus" class="small" style="margin-top:8px"></div>
+        </div>
+
+        <!-- AI lyrics -->
+        <div style="margin-top:12px">
+          <h4>AI Lyrics (GPT)</h4>
+          <textarea id="lyricsPrompt" rows="3" placeholder="Write mood, theme, tempo..." style="margin-top:8px"></textarea>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button id="genLyrics" class="btn btn-primary">Generate</button>
+            <button id="clearLyrics" class="btn btn-ghost">Clear</button>
+          </div>
+          <pre id="lyricsResult" style="margin-top:8px;padding:10px;border-radius:8px;background:#05111a;min-height:80px"></pre>
+        </div>
+
+        <!-- AI music generator -->
+        <div style="margin-top:12px">
+          <h4>AI Music Generator</h4>
+          <input id="musicPrompt" placeholder="E.g., Upbeat Afropop with percussion & guitar" style="margin-top:8px"/>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button id="genMusic" class="btn btn-primary">Generate Music</button>
+          </div>
+          <div id="musicResult" style="margin-top:8px"></div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <a class="whatsapp" href="https://wa.me/231887716973" target="_blank" title="WhatsApp Akin">
+    <svg viewBox="0 0 24 24" width="26" height="26" style="fill:white"><path d="M20.52 3.48A11.95 11.95 0 0012 0C5.372 0 0 5.373 0 12 0 14.117.59 16.11 1.7 17.85L0 24l6.39-1.68A11.93 11.93 0 0012 24c6.628 0 12-5.373 12-12 0-3.2-1.25-6.18-3.48-8.52zM12 21c-1.82 0-3.54-.49-5.05-1.37l-.36-.22-3.79 1 1-3.7-.25-.37A8.9 8.9 0 013 12c0-4.97 4.03-9 9-9s9 4.03 9 9-4.03 9-9 9z"/><path d="M17.1 14.2c-.3-.15-1.78-.88-2.05-.98-.27-.1-.47-.15-.67.15-.2.3-.77.98-.94 1.18-.17.2-.34.22-.64.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.06-.17-.29-.02-.45.13-.6.13-.12.3-.33.45-.5.15-.17.2-.3.3-.5.1-.2.05-.4-.02-.55-.07-.16-.67-1.62-.92-2.22-.24-.6-.48-.52-.67-.53l-.57-.01c-.2 0-.53.07-.8.36-.27.29-1.03 1.01-1.03 2.46 0 1.45 1.05 2.85 1.2 3.05.15.2 2.07 3.18 5.02 4.47 2.95 1.29 2.95.86 3.48.81.53-.05 1.78-.73 2.03-1.44.25-.7.25-1.3.18-1.45-.07-.15-.27-.25-.57-.4z"/></svg>
+  </a>
+
+  <footer>
+    © 2025 SUPERHITZ by Akin S. Sokpah — Built with ❤️ · Contact: <a href="https://wa.me/231887716973" style="color:var(--gold)">+231 887 716 973</a>
+  </footer>
+
+  <!-- FRONTEND SCRIPT -->
+  <script>
+    /***********************
+     *  FRONTEND LOGIC
+     * - Uses Firebase client SDK for Auth, Firestore, Storage.
+     * - Calls secure backend endpoints on Cloud Functions:
+     *    POST /generate-lyrics
+     *    POST /generate-music
+     *    POST /upload
+     *
+     * IMPORTANT:
+     *   After deploying functions, update API_BASE to your functions domain (or keep relative if hosting on same project).
+     ************************/
+
+    // ----- 1) Firebase Web Config (use your project's config)
     const firebaseConfig = {
       apiKey: "AIzaSyAGvgWqTdd0tt72NZAc6XQVM1GOj6FgThs",
       authDomain: "superhitz-app.firebaseapp.com",
@@ -21,147 +186,211 @@
       messagingSenderId: "872258546441",
       appId: "1:872258546441:web:fe82ded48bb326a649c1d8"
     };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const storage = firebase.storage();
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const storage = getStorage(app);
+    // ----- 2) DOM refs
+    const authLink = document.getElementById('authLink');
+    const googleSignIn = document.getElementById('googleSignIn');
+    const emailToggle = document.getElementById('emailToggle');
+    const emailForm = document.getElementById('emailForm');
+    const emailSignIn = document.getElementById('emailSignIn');
+    const emailRegister = document.getElementById('emailRegister');
+    const signOutBtn = document.getElementById('signOut');
+    const displayNameEl = document.getElementById('displayName');
+    const displayEmailEl = document.getElementById('displayEmail');
+    const signedIn = document.getElementById('signedIn');
+    const signedOut = document.getElementById('signedOut');
 
-    // ---------------------- AUTH FUNCTIONS ----------------------
-    const emailInput = document.getElementById('email');
-    const passInput = document.getElementById('password');
-    const loginBtn = document.getElementById('loginBtn');
-    const registerBtn = document.getElementById('registerBtn');
-    const googleBtn = document.getElementById('googleBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const userInfo = document.getElementById('userInfo');
-
-    loginBtn.onclick = async () => {
-      try {
-        await signInWithEmailAndPassword(auth, emailInput.value, passInput.value);
-        alert('✅ Logged in successfully!');
-        showMusicSection();
-      } catch (e) {
-        alert(`❌ Login failed: ${e.message}`);
-      }
-    };
-
-    registerBtn.onclick = async () => {
-      try {
-        await createUserWithEmailAndPassword(auth, emailInput.value, passInput.value);
-        alert('🎉 Account created successfully!');
-      } catch (e) {
-        alert(`❌ Registration failed: ${e.message}`);
-      }
-    };
-
-    googleBtn.onclick = async () => {
-      const provider = new GoogleAuthProvider();
-      try {
-        await signInWithPopup(auth, provider);
-        alert('✅ Google Sign-in success!');
-        showMusicSection();
-      } catch (e) {
-        alert(`❌ Google Sign-in failed: ${e.message}`);
-      }
-    };
-
-    logoutBtn.onclick = async () => {
-      await signOut(auth);
-      hideMusicSection();
-      alert('👋 Logged out');
-    };
-
-    // ---------------------- MUSIC UPLOAD ----------------------
-    const uploadInput = document.getElementById('musicFile');
+    const uploadCard = document.getElementById('uploadCard');
     const uploadBtn = document.getElementById('uploadBtn');
-    const musicList = document.getElementById('musicList');
+    const clearUpload = document.getElementById('clearUpload');
+    const uploadStatus = document.getElementById('uploadStatus');
 
-    uploadBtn.onclick = async () => {
-      const file = uploadInput.files[0];
-      if (!file) return alert('Please select a music file first 🎶');
+    const genLyricsBtn = document.getElementById('genLyrics');
+    const lyricsPrompt = document.getElementById('lyricsPrompt');
+    const lyricsResult = document.getElementById('lyricsResult');
 
-      const storageRef = ref(storage, `music/${file.name}`);
-      const uploadTask = uploadBytesResumable(storageRef, file);
+    const genMusicBtn = document.getElementById('genMusic');
+    const musicPrompt = document.getElementById('musicPrompt');
+    const musicResult = document.getElementById('musicResult');
 
-      uploadTask.on('state_changed', 
-        (snapshot) => {
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          uploadBtn.innerText = `Uploading... ${Math.round(progress)}%`;
-        }, 
-        (error) => alert('❌ Upload failed: ' + error.message),
-        async () => {
-          const url = await getDownloadURL(uploadTask.snapshot.ref);
-          uploadBtn.innerText = 'Upload Complete ✅';
-          addMusicToList(file.name, url);
-        }
-      );
+    const tracksList = document.getElementById('tracksList');
+
+    // ----- 3) API base (Cloud Functions). If you deploy functions + hosting in same Firebase project you can use relative paths:
+    // Example (if deployed to functions region us-central1): https://us-central1-<project>.cloudfunctions.net/api
+    // If you deploy via firebase functions and hosting in same project, just use relative '/api' (set rewrite in firebase.json).
+    const API_BASE = '/api'; // relative; recommended to deploy functions + hosting in same project and use rewrite to /api
+
+    // ----- 4) Auth handlers
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        signedOut.style.display = 'none';
+        signedIn.style.display = 'block';
+        uploadCard.style.display = 'block';
+        displayNameEl.textContent = user.displayName || 'Artist';
+        displayEmailEl.textContent = user.email || '';
+        authLink.textContent = 'Account';
+      } else {
+        signedOut.style.display = 'block';
+        signedIn.style.display = 'none';
+        uploadCard.style.display = 'none';
+        authLink.textContent = 'Sign in';
+      }
+    });
+
+    googleSignIn.onclick = async () => {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      try { await auth.signInWithPopup(provider); } catch (e) { alert('Google sign-in failed: ' + e.message); }
     };
 
-    // ---------------------- DISPLAY MUSIC ----------------------
-    async function loadMusicList() {
-      const musicRef = ref(storage, 'music/');
-      const res = await listAll(musicRef);
-      res.items.forEach(async (itemRef) => {
-        const url = await getDownloadURL(itemRef);
-        addMusicToList(itemRef.name, url);
-      });
+    emailToggle.onclick = () => { emailForm.style.display = emailForm.style.display === 'none' ? 'block' : 'none'; };
+    emailSignIn.onclick = async () => {
+      const em = document.getElementById('email').value.trim();
+      const pw = document.getElementById('password').value;
+      try { await auth.signInWithEmailAndPassword(em, pw); } catch (e) { alert('Sign-in failed: ' + e.message); }
+    };
+    emailRegister.onclick = async () => {
+      const em = document.getElementById('email').value.trim();
+      const pw = document.getElementById('password').value;
+      try { await auth.createUserWithEmailAndPassword(em, pw); alert('Account created'); } catch (e) { alert('Register failed: ' + e.message); }
+    };
+
+    signOutBtn.onclick = async () => { await auth.signOut(); alert('Signed out'); };
+
+    // ----- 5) Upload handler: posts to backend /api/upload (requires ID token)
+    uploadBtn.onclick = async () => {
+      const user = auth.currentUser;
+      if (!user) return alert('Sign in first');
+      const aFile = document.getElementById('audio').files[0];
+      if (!aFile) return alert('Select an audio file');
+      uploadStatus.textContent = 'Preparing upload...';
+
+      const title = document.getElementById('title').value.trim();
+      const artist = document.getElementById('artist').value.trim();
+      const tags = document.getElementById('tags').value.trim();
+
+      const fd = new FormData();
+      fd.append('audio', aFile);
+      const coverFile = document.getElementById('cover').files[0];
+      if (coverFile) fd.append('cover', coverFile);
+      fd.append('title', title);
+      fd.append('artist', artist);
+      fd.append('tags', tags);
+      fd.append('visibility', 'public');
+
+      uploadBtn.disabled = true;
+      uploadStatus.textContent = 'Uploading...';
+
+      try {
+        const idToken = await user.getIdToken();
+        const res = await fetch(API_BASE + '/upload', {
+          method: 'POST',
+          headers: { Authorization: 'Bearer ' + idToken },
+          body: fd
+        });
+        const j = await res.json();
+        if (j.ok) {
+          uploadStatus.textContent = 'Upload successful';
+          loadTracks();
+        } else {
+          uploadStatus.textContent = 'Upload failed: ' + (j.error || JSON.stringify(j));
+        }
+      } catch (err) {
+        uploadStatus.textContent = 'Upload error: ' + err.message;
+      } finally {
+        uploadBtn.disabled = false;
+      }
+    };
+
+    clearUpload.onclick = () => {
+      document.getElementById('audio').value = '';
+      document.getElementById('cover').value = '';
+      document.getElementById('title').value = '';
+      document.getElementById('artist').value = '';
+      document.getElementById('tags').value = '';
+      uploadStatus.textContent = '';
+    };
+
+    // ----- 6) Generate lyrics: call /api/generate-lyrics
+    genLyricsBtn.onclick = async () => {
+      const prompt = lyricsPrompt.value.trim();
+      if (!prompt) return alert('Enter prompt');
+      const user = auth.currentUser;
+      if (!user) return alert('Sign in first');
+      genLyricsBtn.disabled = true;
+      lyricsResult.textContent = 'Generating...';
+      try {
+        const idToken = await user.getIdToken();
+        const res = await fetch(API_BASE + '/generate-lyrics', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + idToken },
+          body: JSON.stringify({ prompt })
+        });
+        const j = await res.json();
+        if (j.ok) lyricsResult.textContent = j.lyrics || JSON.stringify(j);
+        else lyricsResult.textContent = 'Error: ' + (j.error || JSON.stringify(j));
+      } catch (err) {
+        lyricsResult.textContent = 'Request failed: ' + err.message;
+      } finally { genLyricsBtn.disabled = false; }
+    };
+
+    // ----- 7) Generate music: call /api/generate-music
+    genMusicBtn.onclick = async () => {
+      const prompt = musicPrompt.value.trim();
+      if (!prompt) return alert('Enter music prompt');
+      const user = auth.currentUser;
+      if (!user) return alert('Sign in first');
+      genMusicBtn.disabled = true;
+      musicResult.innerHTML = 'Generating...';
+      try {
+        const idToken = await user.getIdToken();
+        const res = await fetch(API_BASE + '/generate-music', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + idToken },
+          body: JSON.stringify({ prompt, style: 'afropop', durationSeconds: 30 })
+        });
+        const j = await res.json();
+        if (j.ok) {
+          musicResult.innerHTML = '<div class="small">Generated audio:</div><audio controls src="' + j.audioUrl + '"></audio>';
+          loadTracks(); // refresh tracks list
+        } else {
+          musicResult.textContent = 'Error: ' + (j.error || j.note || JSON.stringify(j));
+        }
+      } catch (err) {
+        musicResult.textContent = 'Request failed: ' + err.message;
+      } finally { genMusicBtn.disabled = false; }
+    };
+
+    // ----- 8) Load public tracks from Firestore
+    async function loadTracks() {
+      tracksList.innerHTML = '<div class="small muted">Loading...</div>';
+      try {
+        const snap = await db.collection('tracks').where('visibility','==','public').orderBy('createdAt','desc').limit(30).get();
+        tracksList.innerHTML = '';
+        snap.forEach(doc => {
+          const d = doc.data();
+          const div = document.createElement('div');
+          div.className = 'song';
+          div.innerHTML = '<img class="cover" src="' + (d.coverUrl || 'https://via.placeholder.com/92') + '" />' +
+                          '<div style="flex:1"><strong>' + (d.title || 'Untitled') + '</strong><div class="small">' + (d.artist || d.uploaderName || '') + '</div>' +
+                          '<div style="margin-top:8px"><audio controls src="' + d.audioUrl + '"></audio></div></div>';
+          tracksList.appendChild(div);
+        });
+        if (!tracksList.children.length) tracksList.innerHTML = '<div class="small muted">No public tracks yet.</div>';
+      } catch (err) {
+        tracksList.innerHTML = '<div class="small muted">Load error: ' + err.message + '</div>';
+      }
     }
 
-    function addMusicToList(name, url) {
-      const li = document.createElement('li');
-      li.className = 'p-2 bg-gray-800 text-white rounded mb-2 flex flex-col';
-      li.innerHTML = `
-        <span class="font-semibold">${name}</span>
-        <audio controls class="mt-1 w-full">
-          <source src="${url}" type="audio/mpeg">
-        </audio>
-      `;
-      musicList.appendChild(li);
-    }
+    // initial load
+    loadTracks();
 
-    // ---------------------- UI HANDLING ----------------------
-    function showMusicSection() {
-      document.getElementById('authSection').classList.add('hidden');
-      document.getElementById('musicSection').classList.remove('hidden');
-      loadMusicList();
-    }
-
-    function hideMusicSection() {
-      document.getElementById('musicSection').classList.add('hidden');
-      document.getElementById('authSection').classList.remove('hidden');
-    }
+    // convenience: explore button scrolls to trending
+    document.getElementById('exploreBtn').onclick = () => { document.getElementById('tracksList').scrollIntoView({behavior:'smooth'}); };
 
   </script>
-</head>
-
-<body class="bg-gray-900 text-white font-sans">
-  <header class="p-4 bg-gray-800 shadow-lg flex justify-between items-center">
-    <h1 class="text-2xl font-bold">🎵 SUPERHITZ</h1>
-    <button id="logoutBtn" class="bg-red-600 px-3 py-1 rounded hover:bg-red-700">Logout</button>
-  </header>
-
-  <!-- AUTH SECTION -->
-  <section id="authSection" class="p-6 max-w-md mx-auto mt-12 bg-gray-800 rounded-xl shadow-lg">
-    <h2 class="text-xl font-semibold mb-4">Sign In / Register</h2>
-    <input id="email" type="email" placeholder="Email" class="w-full mb-2 p-2 rounded bg-gray-700 text-white" />
-    <input id="password" type="password" placeholder="Password" class="w-full mb-4 p-2 rounded bg-gray-700 text-white" />
-    <div class="flex space-x-2">
-      <button id="loginBtn" class="bg-yellow-500 flex-1 py-2 rounded font-semibold">Sign In</button>
-      <button id="registerBtn" class="bg-green-500 flex-1 py-2 rounded font-semibold">Register</button>
-    </div>
-    <button id="googleBtn" class="mt-3 w-full bg-blue-600 py-2 rounded font-semibold">Sign in with Google</button>
-  </section>
-
-  <!-- MUSIC SECTION -->
-  <section id="musicSection" class="hidden p-6 max-w-2xl mx-auto mt-10">
-    <h2 class="text-xl font-semibold mb-4">🔥 Trending Songs</h2>
-    <div class="bg-gray-800 p-4 rounded-lg mb-4">
-      <input id="musicFile" type="file" accept="audio/*" class="mb-3 w-full text-sm text-gray-300" />
-      <button id="uploadBtn" class="bg-yellow-500 w-full py-2 rounded font-semibold">Upload Song</button>
-    </div>
-    <ul id="musicList"></ul>
-  </section>
-
 </body>
 </html>
