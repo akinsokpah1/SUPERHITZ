@@ -1,0 +1,3 @@
+// ✅ Secret API Keys (add yours here)
+const OPENAI_API_KEY = process.env.GPA2CK9Kqot615z_UdBtBVZUDOezgfvTPeZxg2Daoii6yV2b0dvufBngMDXSnCxB5sBhMCPn4qT3BlbkFJz7GRnKlXagN29OPmXdmRKb_ADWZ1CssATUA14husuRnTiuQnUbkQtfQ0xQj1v2BYIkHhz9UuwA;
+const HUGGINGFACE_API_KEY = process.env.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;
